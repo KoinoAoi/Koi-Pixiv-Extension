@@ -3,8 +3,8 @@
 	"name": "Koi Pixiv Extension",
 	"version": "1.0",
 	"description": "Make Pixiv Browsing Better",
-	"icons": {"48": "icon48.png",
-			 "128": "icon128.png"},
+	"icons": {"48": "icon48.PNG",
+			 "128": "icon128.PNG"},
 	"content_scripts": [{
 		"js": ["contentscript.js"],
 		"matches": ["*://www.pixiv.net/history.php"]
