@@ -1,0 +1,17 @@
+{
+	"manifest_version": 2,
+	"name": "Koi Pixiv Extension",
+	"version": "1.0",
+	"description": "Make Pixiv Browsing Better",
+	"icons": {
+		"48": "icon48.PNG",
+		"128": "icon128.PNG"
+	},
+	"content_scripts": [{
+			"js": ["jquery-2.1.3.min.js", "script.js"],
+			"matches": ["*://www.pixiv.net/history.php"]
+		}],
+	"permissions": [
+		"http://*.pixiv.net/*"
+	]
+}
