@@ -25,10 +25,12 @@ $(document).on('click', '.image', function(event) {
 	 * There is not enough information here. We will have to download and
 	 * parse the page.
 	 */
-	$.get(href, function(data) {grabData(data)}); 
+	$.get(href, function(data){
+		grabData(data, href);
+	}); 
 });
 
-	function grabData(data){
+	function grabData(data, href){
 		if (!data)
 			return console.error('Failed to fetch: ' + href);
 		var m = data.match(/<[^>]*original-image"[^>]*>/); //check if single image
@@ -69,7 +71,7 @@ $(document).on('click', '.image', function(event) {
 		for(var x=0; x<pageCount; x++){
 			var name = artist + ' - ' + title +'('+artID+')';
 			if(manga){
-				url=url.replace(/_p\d/, '_p'+x);
+				url=url.replace(/_p\d+/, '_p'+x);
 				name = name.concat(' pg'+ x);
 			}
 			download(name, url);		
