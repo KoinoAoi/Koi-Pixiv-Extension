@@ -50,7 +50,7 @@ $(document).on('click', '.image', function(event) {
 				var d = new Date();
 				var mangaxhr = new XMLHttpRequest();
 				//synchronous loading is scary, but we only need the page=0 to get the URL
-				mangaxhr.open('GET', url, false); 
+				mangaxhr.open('GET', url); 
 				mangaxhr.send();
 				url = mangaxhr.responseText.match(/http:\/\/i\d[^"]*/)[0];
 				console.log('mangadata: ' +url);					
