@@ -2,9 +2,8 @@ General Purpose Extension to make my Pixiv Browsing easier.
 
 v1 Makes Pixiv History page full and free
 (Well, not totally full. You still can't use the Comment, Rate, Bookmark buttons on it)
-
-Working on: 
-Integrated Download Button for Pixiv History page
+v1.1
+Integrated Downloading for Pixiv History page
 
 
 How to Run:
