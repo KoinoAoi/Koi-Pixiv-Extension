@@ -70,16 +70,19 @@ $(document).on('click', '.image', function(event) {
 		//iterate through every page number if it's a manga. If not, it'll stop after the first.
 		function proceedToDownload(){
 			for(var x=0; x<pageCount;x++){
-				var xhr = new XMLHttpRequest();
+				
 				var name = artist + ' - ' + title +'('+artID+')';
 				if(type='manga'){
 					//Adjust Filename
 					url=url.replace(/_p\d/, '_p'+x);
 					console.log('Iterated URL: '+url);
 					name = name.concat(' pg'+ x);
-
 				}
-
+				download(name);		
+			}
+		}// end of proceedToDownload()
+		function download(name){
+			var xhr = new XMLHttpRequest();
 				xhr.open('GET', url);
 				xhr.responseType = 'blob';
 				xhr.send();
@@ -91,9 +94,8 @@ $(document).on('click', '.image', function(event) {
 					a.setAttribute('href',window.URL.createObjectURL(this.response));
 					a.setAttribute('download', name);
 					a.click();
-				};			
-			}
-		}// end of proceedToDownload()
+				};	
+		}
 
 	});
 });
