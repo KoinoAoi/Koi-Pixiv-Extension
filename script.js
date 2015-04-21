@@ -26,19 +26,20 @@ $(document).on('click', '.image', function(event) {
 	 * parse the page.
 	 */
 	$.get(href, function(data) {grabData(data)}); 
+});
 
 	function grabData(data){
 		if (!data)
 			return console.error('Failed to fetch: ' + href);
 		var m = data.match(/<[^>]*original-image"[^>]*>/); //check if single image
 		var manga = false;
-		var pageCount = 1;
 		if (!m){//if not single, check for manga
 			m = data.match(/<[^>]*mode=manga([^<]*)/);
 			if(!m)//if not manga, end
 				return console.error('Parsing error: ' + href);
 			manga = true;
 		}
+
 		var artID = href.match(/=(\d+)/)[1];
 		var info = $(data.match(/<[^>]*meta property="og:title"[^\n]*/)[0]);
 		var content = info[0].content;
@@ -47,7 +48,7 @@ $(document).on('click', '.image', function(event) {
 		var $origin = $(m[0]), url;
 
 		if (manga){
-			pageCount = parseInt(data.match(/(\d+)(?=P<\/)/)[0]);
+			var pageCount = parseInt(data.match(/(\d+)(?=P<\/)/)[0]);
 			url = $origin[0].href;
 			url = url.replace('manga', 'manga_big').concat('&page=0');
 			var mangaxhr = new XMLHttpRequest();
@@ -90,4 +91,3 @@ $(document).on('click', '.image', function(event) {
 				a.click();
 			};	
 	}//end of download()
-});
