@@ -62,18 +62,21 @@ $(document).on('click', '.image', function(event) {
 			}
 		}
 		else{
-			url = $origin.data('src');
+			url = $origin.data('src');			
 			downloadName(title, artist, artID, false, url, 1);
 		}
 	}
 
 	function downloadName(title, artist, artID, manga, url, pageCount){
+		var last = url.match(/[^\.]+/g);
+		var fType = last[last.length-1];
 		for(var x=0; x<pageCount; x++){
 			var name = artist + ' - ' + title +'('+artID+')';
 			if(manga){
 				url=url.replace(/_p\d+/, '_p'+x);
 				name = name.concat(' pg'+ x);
 			}
+			name = name.concat('.'+fType);
 			download(name, url);		
 		}
 	}// end of proceedToDownload()
