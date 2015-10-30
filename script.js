@@ -1,3 +1,5 @@
+'use strict'
+
 document.onDOMContentLoaded= function() {
 	document.getElementsByClassName('premium-ad')[0]
 		.setAttribute('style','display:none');
@@ -17,22 +19,28 @@ document.onDOMContentLoaded= function() {
  * with no access to the mutation code. So lets just override the click
  * event. Later some behaviour divergance can be added.
  */
-$(document).on('click', '.image', function(event) {
-	event.preventDefault();
-	var $el = $(event.target),
-		href = $el[0].href;
+document.addEventListener('click', event => {
+	const el = event.target
+	if (!el.matches('.image'))
+		return
+	event.preventDefault()
+
 	/*
 	 * There is not enough information here. We will have to download and
 	 * parse the page.
 	 */
-	$.get(href, function(data){
-		grabData(data, href);
-	}); 
-});
+	const xhr = new XMLHttpRequest(),
+		href = el.href
+	xhr.open('GET', href)
+	xhr.onload = function () {
+		if (this.status !== 200)
+			return alert(`Failed to fetch: ${this.status}: ${href}`)
+		grabData(this.response, href)
+	}
+	xhr.send()
+})
 
 	function grabData(data, href){
-		if (!data)
-			return console.error('Failed to fetch: ' + href);
 		var m = data.match(/<[^>]*original-image"[^>]*>/); //check if single image
 		var manga = false;
 		if (!m){//if not single, check for manga
@@ -43,26 +51,25 @@ $(document).on('click', '.image', function(event) {
 		}
 
 		var artID = href.match(/=(\d+)/)[1];
-		var info = $(data.match(/<[^>]*meta property="og:title"[^\n]*/)[0]);
-		var content = info[0].content;
+		var info = data.match(/<[^>]*meta property="og:title"[^\n]*/)[0];
+		var content = parseDOM(info).getAttribute('content');
 		var title = content.match(/[^|]*/)[0];
 		var artist = content.match(/[|][^[]*/)[0].substring(2);
-		var $origin = $(m[0]), url;
+		var origin = parseDOM(m[0]), url;
 
 		if (manga){
 			var pageCount = parseInt(data.match(/(\d+)(?=P<\/)/)[0]);
-			url = $origin[0].href;
-			url = url.replace('manga', 'manga_big').concat('&page=0');
+			url = origin.href.replace('manga', 'manga_big') + '&page=0';
 			var mangaxhr = new XMLHttpRequest();
-			mangaxhr.open('GET', url); 
+			mangaxhr.open('GET', url);
 			mangaxhr.send();
 			mangaxhr.onload = function(){
 				url = mangaxhr.responseText.match(/http:\/\/i\d[^"]*/)[0];
 				downloadName(title, artist, artID, true, url, pageCount);
 			}
 		}
-		else{
-			url = $origin.data('src');			
+		else {
+			url = origin.getAttribute('data-src');
 			downloadName(title, artist, artID, false, url, 1);
 		}
 	}
@@ -77,7 +84,7 @@ $(document).on('click', '.image', function(event) {
 				name = name.concat(' pg'+ x);
 			}
 			name = name.concat('.'+fType);
-			download(name, url);		
+			download(name, url);
 		}
 	}// end of proceedToDownload()
 
@@ -88,11 +95,21 @@ $(document).on('click', '.image', function(event) {
 			xhr.send();
 			xhr.onload = function(){
 				if (this.status !== 200)
-					return console.error(`Fetch failed: ${this.status} : ${url}`);
+					return alert(`Fetch failed: ${this.status} : ${url}`);
 				// Download the Blob
 				var a = document.createElement('a');
 				a.setAttribute('href',window.URL.createObjectURL(this.response));
 				a.setAttribute('download', name);
 				a.click();
-			};	
+			};
 	}//end of download()
+
+// Parse HTML string to node array/element
+function parseDOM(string, forceArray) {
+	const el = document.createElement('div')
+	el.innerHTML = string
+	const children = el.childNodes
+	if (!forceArray && children.length === 1)
+		return children[0]
+	return Array.from(children)
+}
