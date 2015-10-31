@@ -74,6 +74,7 @@ document.addEventListener('click', event => {
 			var pageCount = parseInt(data.match(/(\d+)(?=P<\/)/)[0]);
 			url = origin.href.replace('manga', 'manga_big') + '&page=0';
 			var mangaCheck = (document.getElementsByClassName('manga-viewer')[0]);
+			var mangaxhr = new XMLHttpRequest();
 			mangaxhr.open('GET', url);
 			mangaxhr.send();
 			mangaxhr.onload = function(){
