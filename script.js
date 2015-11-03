@@ -25,7 +25,7 @@ document.addEventListener('click', event => {
 	var mangaCheck = document.getElementsByClassName('manga-viewer');
 	if(el.matches('.manga-thumb')){
 		event.preventDefault();
-		var pNum = el.getAttribute('data-src').match(/p(\d+)/)[1];
+		var pNum = el.getAttribute('data-src').match(/(img\/[^]+)/)[1];
 		turnPage(pNum);
 		return
 	}
@@ -145,10 +145,10 @@ document.addEventListener('click', event => {
 
 	}
 	//When clicking on a manga thumbnail, change the expanded image
-	function turnPage(pageNum){
+	function turnPage(page){
 		var imgContainer = document.getElementsByClassName('image-container')[0].
 			getElementsByTagName('a')[0];
-		var x = imgContainer.getAttribute('style').replace(/_p\d+/, '_p'+pageNum);
+		var x = imgContainer.getAttribute('style').replace(/(img\/[^)]+)/, page);
 		imgContainer.setAttribute('style', x);
 	}
 
