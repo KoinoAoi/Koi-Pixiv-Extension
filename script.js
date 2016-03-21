@@ -62,12 +62,13 @@ document.addEventListener('click', event => {
 				return console.error('Parsing error: ' + href);
 			manga = true;
 		}
-
+		
+		var parser = new DOMParser(),
+		    doc    = parser.parseFromString(data, "text/html");		
 		var artID = href.match(/=(\d+)/)[1];
-		var info = data.match(/<[^>]*meta property="og:title"[^\n]*/)[0];
-		var content = parseDOM(info).getAttribute('content');
-		var title = content.match(/[^|]*/)[0];
-		var artist = content.match(/[|][^[]*/)[0].substring(2);
+		var info = doc.title.match(/[^「」/]+/g);
+		var title = info[0];
+		var artist = info[1];
 		var origin = parseDOM(m[0]), url;
 
 		if (manga){
@@ -148,7 +149,7 @@ document.addEventListener('click', event => {
 	function turnPage(page){
 		var imgContainer = document.getElementsByClassName('image-container')[0].
 			getElementsByTagName('a')[0];
-		var x = imgContainer.getAttribute('style').replace(/(img\/[^)]+)/, page);
+		var x = imgContainer.getAttribute('style').replace(/(img\/[^"]+)/, page);
 		imgContainer.setAttribute('style', x);
 	}
 
@@ -209,3 +210,4 @@ function parseDOM(string, forceArray) {
 		return children[0]
 	return Array.from(children)
 }
+
