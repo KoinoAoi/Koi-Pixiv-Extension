@@ -12,6 +12,7 @@
 			"matches": ["*://www.pixiv.net/history.php"]
 		}],
 	"permissions": [
-		"http://*.pixiv.net/*"
+		"http://*.pixiv.net/*",
+		"https://*.pixiv.net/*"
 	]
 }
